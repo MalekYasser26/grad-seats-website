@@ -9,23 +9,35 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       background: linear-gradient(135deg, #74ebd5, #ACB6E5);
       font-family: 'Poppins', sans-serif;
+      padding: 20px;
     }
 
     .card {
       background: #fff;
-      padding: 40px;
+      padding: 40px 30px;
       border-radius: 20px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       text-align: center;
+      max-width: 400px;
+      width: 100%;
       animation: fadeIn 1.2s ease-in-out;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
     }
 
     h1 {
@@ -40,6 +52,7 @@
       font-weight: bold;
       color: #4cafef;
       animation: pulse 1.5s infinite;
+      word-wrap: break-word;
     }
 
     @keyframes fadeIn {
@@ -52,6 +65,27 @@
       50% { transform: scale(1.05); }
       100% { transform: scale(1); }
     }
+
+    /* Responsive adjustments */
+    @media (max-width: 500px) {
+      .card {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      #seat-number {
+        font-size: 3rem;
+      }
+    }
+
+    @media (max-width: 350px) {
+      #seat-number {
+        font-size: 2.5rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -61,24 +95,28 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyKJQr1gRmRryM6KyF1i-_1ImzwLgD9Agg_d7RhesIzXC4QpaGvt23FlIYQY0QEezjd/exec"; // <-- Replace this
+    const API_URL = "YOUR_GOOGLE_SCRIPT_URL"; // <-- Replace this with your working Web App URL
 
     async function fetchSeats() {
       try {
         const response = await fetch(API_URL);
         const text = await response.text();
-        document.getElementById("seat-number").textContent = text;
+        // Try to parse as number
+        const seats = parseInt(text);
+        if (!isNaN(seats)) {
+          document.getElementById("seat-number").textContent = seats;
+        } else {
+          document.getElementById("seat-number").textContent = "Error!";
+          console.error("Unexpected response:", text);
+        }
       } catch (error) {
         document.getElementById("seat-number").textContent = "Error!";
         console.error("Failed to fetch seats:", error);
       }
     }
 
-    // Fetch immediately
     fetchSeats();
-
-    // Refresh every 30 seconds
-    setInterval(fetchSeats, 30000);
+    setInterval(fetchSeats, 30000); // refresh every 30 seconds
   </script>
 </body>
 </html>
