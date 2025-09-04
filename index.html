@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
   <title>عدد الكراسي الباقية</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Google Fonts -->
-     <link rel="icon" type="image/png" href="grad.png">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="grad.png">
 
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     body {
       margin: 0;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -21,24 +22,35 @@
       font-family: 'Poppins', sans-serif;
     }
 
+    .container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: stretch;
+      width: 90%;
+      max-width: 900px;
+    }
+
     .card {
+      flex: 1 1 250px;
       background: #fff;
-      padding: 40px;
+      padding: 30px;
       border-radius: 20px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       text-align: center;
       animation: fadeIn 1.2s ease-in-out;
     }
 
-    h1 {
-      font-size: 2rem;
+    h2 {
+      font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 15px;
       color: #333;
     }
 
-    #seat-number {
-      font-size: 4rem;
+    .seat-number {
+      font-size: 3rem;
       font-weight: bold;
       color: #4cafef;
       animation: pulse 1.5s infinite;
@@ -54,24 +66,40 @@
       50% { transform: scale(1.05); }
       100% { transform: scale(1); }
     }
+
+    /* Responsive behavior */
+    @media (max-width: 600px) {
+      .container {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>عدد الكراسي الباقية </h1>
-    <div id="seat-number">Loading...</div>
+  <div class="container">
+    <div class="card">
+      <h2>الكراسي ب 160 جنيه الباقية</h2>
+      <div id="seat-160" class="seat-number">... شوية صبر </div>
+    </div>
+    <div class="card">
+      <h2>الكراسي ب 120 جنيه الباقية</h2>
+      <div id="seat-120" class="seat-number">... شوية صبر </div>
+    </div>
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwH5LTItlS9jq_Lus8o-utqI5fbdWF7A9_n9WNYxp557TDjyuyC1FWT1nKs5tbVXaqv/exec"; // <-- Replace this
+    const API_URL = "https://script.google.com/macros/s/AKfycbzKvHLtyDNGHnn7rYntGbpUExkRH-D8QbBdbodg2MpNSM9gE87PY1zXMJq528PJz5QS/exec";
 
     async function fetchSeats() {
       try {
         const response = await fetch(API_URL);
-        const text = await response.text();
-        document.getElementById("seat-number").textContent = text;
+        const data = await response.json();
+
+        document.getElementById("seat-160").textContent = data.remaining160;
+        document.getElementById("seat-120").textContent = data.remaining120;
       } catch (error) {
-        document.getElementById("seat-number").textContent = "Error!";
+        document.getElementById("seat-160").textContent = "Error!";
+        document.getElementById("seat-120").textContent = "Error!";
         console.error("Failed to fetch seats:", error);
       }
     }
